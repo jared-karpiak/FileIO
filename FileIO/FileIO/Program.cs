@@ -1,11 +1,10 @@
-﻿using System.IO;
-
-namespace FileIO
+﻿namespace FileIO
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+            #region Reading and Writing Basic Text
             // if we don't specify the directory of a file, the default directory is used,
             // 
             string classListFileName = "classlist.txt";
@@ -24,6 +23,7 @@ namespace FileIO
                     // The EndOfStream property on the StreamReader object will return a bool
                     // indicating if we have reached the end of a stream of data.
                     
+                    // Since we may not know how large the file is, we will use a while loop
                     while (!reader.EndOfStream)
                     {
                         // reader.ReadLine() will read a single line of a file.
@@ -87,7 +87,99 @@ namespace FileIO
             {
                 Console.WriteLine($"There was a problem: {e.Message}");
             }
+            #endregion
 
+            #region Reading Comma Separated Values (CSV)
+
+            // Comma separated values are a series of values that are separated by, you guessed it, commas
+            // CSVs are a very common way of storing simple pieces of data in a text file. 
+
+            // Imagine we have a text file that holds the first name, last name, and student ID of a group of students.
+            // A single student record would be stored on a single line in the text file, like this:
+            // <firstName>,<lastName>,<studentID>
+            
+            // The second record would be stored in exactly the same way on the second line, then the third record, and so on.
+            
+            // Two approaches will be taken to demonstrate this example
+
+            string studentsFile = "students.csv";
+
+            if (File.Exists(studentsFile))
+            {
+                // File.ReadAllLines will return an array of strings
+                // each item in the array is one line in the text file
+                // if we know it is a CSV 
+
+                string[] students = File.ReadAllLines(studentsFile);
+
+                // loop through each string in the array
+                for (int i = 0; i < students.Length; i++)
+                {
+                    // Split() takes in a char as a delimiter and returns 
+                    // an array of string.
+                    // The array is made up of each string that was separated
+                    // by the specified delimiter
+
+                    // Example, if we have the following string:
+                    // string myString = jared,karpiak,123
+                    // and use myString.Split(',');
+                    // we will have an array of strings with 3 items.
+                    // The first string will be "jared"
+                    // The second string will be "karpiak"
+                    // The third string will be "123"
+
+                    string[] record = students[i].Split(',');
+
+                    // the foreach loop can be applied to a collection, like
+                    // an array or a list.
+
+                    // It will iterate through each item in the collection
+                    // and create a temporary variable for it that can only
+                    // be used inside of the foreach loop (the scope of the
+                    // variable is in the foreach).
+                    foreach (string entry in record)
+                    {
+                        // the string method PadRight() will set a total
+                        // width that a string can be. If the string length is
+                        // smaller than the supplied integer (representing
+                        // the total width), PadRight() will will the
+                        // rest with white space.
+                        Console.Write($"{entry.PadRight(20)}");
+                    }
+
+                    Console.WriteLine();
+                }
+            }
+            #endregion
+
+            #region Writing Comma Separated Values (CSV)
+
+            // To create a Comma Separated Value file, we can follow
+            // the same method as with writing a text file, using
+            // the StreamWriter class
+
+            string actorCsvFileName = "actors.csv";
+            string actors = "FirstName,LastName,Ability;" +
+                "Keanu,Reeves,Meh;" +
+                "Awkwa,Fina,Questionable;" +
+                "Cillian,Murphy,Oscar Worthy;" +
+                "Michelle,Yeoh,Excellent";
+
+            using (StreamWriter sw = new StreamWriter(actorCsvFileName))
+            {
+                // create an array to store each full record
+                // Split() can take any character as a delimiter
+                string[] actorRecords = actors.Split(';');
+                
+                foreach (string record in actorRecords)
+                {
+                    // write each record to the file (including the commas
+                    // since we are creating a csv file)
+                    sw.WriteLine(record);
+                }
+            }
+
+            #endregion
         }
     }
 }
