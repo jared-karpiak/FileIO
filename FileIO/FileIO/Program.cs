@@ -130,21 +130,27 @@
 
                     string[] record = students[i].Split(',');
 
-                    // the foreach loop can be applied to a collection, like
-                    // an array or a list.
-
-                    // It will iterate through each item in the collection
-                    // and create a temporary variable for it that can only
-                    // be used inside of the foreach loop (the scope of the
-                    // variable is in the foreach).
-                    foreach (string entry in record)
+                    for (int j = 0; j < record.Length; j++)
                     {
-                        // the string method PadRight() will set a total
-                        // width that a string can be. If the string length is
-                        // smaller than the supplied integer (representing
-                        // the total width), PadRight() will will the
-                        // rest with white space.
-                        Console.Write($"{entry.PadRight(20)}");
+                        // With string interpolation we can use an integer after
+                        // our string to add padding. This integer represents
+                        // the total width of the string. If the string length
+                        // is smaller than the integer, then whitespace will be
+                        // added. A negative number represents padding on the right
+                        // A positive integer padding on the left.
+                        Console.Write($"{record[j],-20}");
+                    }
+                    
+                    // Often times a CSV will have a header row (names of the column)
+                    // This will be the first row in a CSV file.
+                    // We can add some additional text styling based on this
+
+                    if (i == 0)
+                    { 
+                        // Create a newline character as a string
+                        // We can then use the PadRight string method
+                        // to add 60 dashes.
+                        Console.WriteLine("\n".PadRight(60, '-'));
                     }
 
                     Console.WriteLine();
@@ -170,7 +176,14 @@
                 // create an array to store each full record
                 // Split() can take any character as a delimiter
                 string[] actorRecords = actors.Split(';');
-                
+
+                // the foreach loop can be applied to a collection, like
+                // an array or a list.
+
+                // It will iterate through each item in the collection
+                // and create a temporary variable for it that can only
+                // be used inside of the foreach loop (the scope of the
+                // variable is in the foreach).
                 foreach (string record in actorRecords)
                 {
                     // write each record to the file (including the commas
