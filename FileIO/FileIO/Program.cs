@@ -160,22 +160,63 @@
 
             #region Writing Comma Separated Values (CSV)
 
+            try
+            {
+                string actorCsvFileName = "actors.csv";
+                string actors = "FirstName,LastName,Ability;" +
+                    "Keanu,Reeves,Meh;" +
+                    "Awkwa,Fina,Questionable;" +
+                    "Cillian,Murphy,Oscar Worthy;" +
+                    "Michelle,Yeoh,Excellent";
+
+                WriteToCSVFile(actors, actorCsvFileName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
+
+            #endregion
+        }
+        /// <summary>
+        /// Name: WriteToCSVFile()
+        /// Purpose: Write a comma separated value string to a file.
+        /// </summary>
+        /// <param name="csvString">The string to be written</param>
+        /// <param name="fileName">the name of the file</param>
+        /// <exception cref="ArgumentException"></exception>
+        static void WriteToCSVFile(string csvString, string fileName)
+        {
+            // "Defensive programming" is a term used to describe a particular
+            // programming approach. One aspect of defensive programming is validation the
+            // values of parameters in a method before executing any code in
+            // that method. If the parameters to a method are not valid, then we don't
+            // bother executing the rest of the method and instead throw an error, often
+            // the ArgumentException().
+
+            if (string.IsNullOrWhiteSpace(csvString) || string.IsNullOrWhiteSpace(fileName))
+            {
+                // Both the csvString and the fileName need to have a value, so throw an
+                // exception if either of these is empty.
+                throw new ArgumentException("Arguments to WriteToCSVFile() are null or empty!");
+            }
+            if (fileName.Length > 20)
+            {
+                // the file name should not be greater than 20 characters. If it is then
+                // throw the exception
+                throw new ArgumentException("File name must be less than 20 characters.");
+            }
+            // Once we make it here, then our validations of the parameters have passed.
+
             // To create a Comma Separated Value file, we can follow
             // the same method as with writing a text file, using
             // the StreamWriter class
-
-            string actorCsvFileName = "actors.csv";
-            string actors = "FirstName,LastName,Ability;" +
-                "Keanu,Reeves,Meh;" +
-                "Awkwa,Fina,Questionable;" +
-                "Cillian,Murphy,Oscar Worthy;" +
-                "Michelle,Yeoh,Excellent";
-
-            using (StreamWriter sw = new StreamWriter(actorCsvFileName))
+            using (StreamWriter sw = new StreamWriter(fileName))
             {
                 // create an array to store each full record
                 // Split() can take any character as a delimiter
-                string[] actorRecords = actors.Split(';');
+                string[] records = csvString.Split(';');
 
                 // the foreach loop can be applied to a collection, like
                 // an array or a list.
@@ -184,15 +225,13 @@
                 // and create a temporary variable for it that can only
                 // be used inside of the foreach loop (the scope of the
                 // variable is in the foreach).
-                foreach (string record in actorRecords)
+                foreach (string record in records)
                 {
                     // write each record to the file (including the commas
                     // since we are creating a csv file)
                     sw.WriteLine(record);
                 }
             }
-
-            #endregion
         }
     }
 }
